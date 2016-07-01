@@ -68,13 +68,25 @@ Define the route to the config file. This file must be in YML format.
 #### --file
 Route of the file where we has to save the generated HTML file.
 
+#### --email
+The destinatin email of the dashboard. This will use the template at templates/email.html
+
 _NOTE: If there is an error, the script will not overwrite the old file_
 
 ## Example config file
 ```yml
+Template:
+  title: "Your cloud status"
+  from: "yourname@yourcompany.com"
 Credentials:
-    AWS_ID: 'AAAAAAAAAAAAAAAA'
-    AWS_PASS: 'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'
+  # Credentials for CloudWatch API at AWS
+  AWS_ID: 'XXXXXXXXXXXXXXXXXXXX'
+  AWS_PASS: 'YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY'
+  region: 'ap-northeast-2'
+  # Credentials for SES service of AWS
+  email:
+    AWS_ID: 'XXXXXXXXXXXXXXXXXXXX'
+    AWS_PASS: 'YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY'
     region: 'eu-west-1'
 Graphs:
     - LoadBalancer:
@@ -105,13 +117,20 @@ Graphs:
 ## Example CRON jobs
 
 ```bash
-* * * * * python /home/ec2-user/monitoring/dashboard.py --config="/home/ec2-user/config.yml" --hours 1 --file /var/www/status/index.html
-*/2 * * * * python /home/ec2-user/monitoring/dashboard.py --config="/home/ec2-user/config.yml" --hours 8 --file /var/www/status/last8hours.html
-*/10 * * * * python /home/ec2-user/monitoring/dashboard.py --config="/home/ec2-user/config.yml" --hours 24 --file /var/www/status/last24hours.html
-*/10 * * * * python /home/ec2-user/monitoring/dashboard.py --config="/home/ec2-user/config.yml" --hours 48 --file /var/www/status/last48hours.html
+* * * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 1 --file /var/www/status/index.html
+*/2 * * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 8 --file /var/www/status/last8hours.html
+*/10 * * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 24 --file /var/www/status/last24hours.html
+*/10 * * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 48 --file /var/www/status/last48hours.html
+```
+
+## Sent reports by email
+
+```bash
+0 6 * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 12 --email email@example.com
+0 16 * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 24 --email email@example.com
 ```
 
 ## TODO
 
-* Change the color palette. That needs solid colors and easy to read.
 * Parameter to select the jinja2 templates in the command line
+* Use SMTP standar protocol to send emails, at the moment only send by SES
