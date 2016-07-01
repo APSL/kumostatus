@@ -1,0 +1,167 @@
+Template:
+  title: "This is the report title"
+Credentials:
+    AWS_ID: 'AAAAAAAAAAAAAAAA'
+    AWS_PASS: 'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'
+    region: 'eu-west-1'
+Graphs:
+    - LoadBalancer:
+        title: "External Load balancer"
+        metrics:
+            - metric:
+                label: "Latency external load balancer"
+                namespace: "AWS/ELB"
+                name: "Latency"
+                dimensions:
+                    name: "LoadBalancerName"
+                    value: "DOTW-LB-EUWEST1-EXT"
+                statistics: "Average"
+                unit: "Seconds"
+                yaxis: False
+            - metric:
+                label: "Requests external load balancer"
+                namespace: "AWS/ELB"
+                name: "RequestCount"
+                dimensions:
+                    name: "LoadBalancerName"
+                    value: "DOTW-LB-EUWEST1-EXT"
+                statistics: "Sum"
+                unit: "Count"
+                yaxis: True
+    - Aurora:
+        title: "Aurora cluster"
+        metrics:
+            - metric:
+                label: "CPU Aurora cluster"
+                namespace: "AWS/RDS"
+                name: "CPUUtilization"
+                dimensions:
+                    name: "DBInstanceIdentifier"
+                    value: "dotw-live"
+                statistics: "Average"
+                unit: "Percent"
+                yaxis: False
+            - metric:
+                label: "CPU Aurora cluster"
+                namespace: "AWS/RDS"
+                name: "CPUUtilization"
+                dimensions:
+                    name: "DBInstanceIdentifier"
+                    value: "dotw-read01"
+                statistics: "Average"
+                unit: "Percent"
+                yaxis: False
+            - metric:
+                label: "CPU Aurora cluster"
+                namespace: "AWS/RDS"
+                name: "CPUUtilization"
+                dimensions:
+                    name: "DBInstanceIdentifier"
+                    value: "dotw-read02"
+                statistics: "Average"
+                unit: "Percent"
+                yaxis: False
+            - metric:
+                label: "CPU Aurora cluster"
+                namespace: "AWS/RDS"
+                name: "CPUUtilization"
+                dimensions:
+                    name: "DBInstanceIdentifier"
+                    value: "dotw-read03"
+                statistics: "Average"
+                unit: "Percent"
+                yaxis: False
+            - metric:
+                label: "CPU Aurora cluster"
+                namespace: "AWS/RDS"
+                name: "CPUUtilization"
+                dimensions:
+                    name: "DBInstanceIdentifier"
+                    value: "dotw-read04"
+                statistics: "Average"
+                unit: "Percent"
+                yaxis: False
+            - metric:
+                label: "CPU Aurora cluster"
+                namespace: "AWS/RDS"
+                name: "CPUUtilization"
+                dimensions:
+                    name: "DBInstanceIdentifier"
+                    value: "dotw-read05"
+                statistics: "Average"
+                unit: "Percent"
+                yaxis: False
+            - metric:
+                label: "CPU Aurora cluster"
+                namespace: "AWS/RDS"
+                name: "CPUUtilization"
+                dimensions:
+                    name: "DBInstanceIdentifier"
+                    value: "dotw-read06"
+                statistics: "Average"
+                unit: "Percent"
+                yaxis: False
+            - metric:
+                label: "CPU Aurora cluster"
+                namespace: "AWS/RDS"
+                name: "CPUUtilization"
+                dimensions:
+                    name: "DBInstanceIdentifier"
+                    value: "dotw-read07"
+                statistics: "Average"
+                unit: "Percent"
+                yaxis: False
+            - metric:
+                label: "CPU Aurora cluster"
+                namespace: "AWS/RDS"
+                name: "CPUUtilization"
+                dimensions:
+                    name: "DBInstanceIdentifier"
+                    value: "dotw-read08"
+                statistics: "Average"
+                unit: "Percent"
+                yaxis: False
+    - Workers:
+        title: "PHP Workers"
+        metrics:
+            - metric:
+                label: "CPU PHP Workers"
+                namespace: "AWS/EC2"
+                name: "CPUUtilization"
+                dimensions:
+                    name: "AutoScalingGroupName"
+                    value: "TEST_MA_20160305_V2"
+                statistics: "Average"
+                unit: "Percent"
+                yaxis: False
+    - Searches:
+        title: "Searches"
+        metrics:
+            - metric:
+                label: "DubaiFIT"
+                namespace: "Searches"
+                name: "DubaiFIT"
+                statistics: "Minimum"
+                unit: "None"
+                yaxis: False
+            - metric:
+                label: "Dubai"
+                namespace: "Searches"
+                name: "Dubai"
+                statistics: "Minimum"
+                unit: "None"
+                yaxis: False
+            - metric:
+                label: "LondonFIT"
+                namespace: "Searches"
+                name: "LondonFIT"
+                statistics: "Minimum"
+                unit: "None"
+                yaxis: True
+            - metric:
+                label: "London"
+                namespace: "Searches"
+                name: "London"
+                statistics: "Minimum"
+                unit: "None"
+                yaxis: True

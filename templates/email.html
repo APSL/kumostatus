@@ -1,0 +1,156 @@
+
+<h1>{{ title }}</h1>
+
+
+<p>Generated at {{ gentime }}</p>
+
+
+{% if alarms.alarms[1] %}
+  <h3 style="color: red;">Alarm!!</h3>
+  {% for alarm in alarms.alarms[1] %}
+    <div style="color: red;">
+      <hr>
+
+      {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+      <br>
+      {{ alarm.current_value }}
+      {% if alarm.uuid %}<img src="cid:{{alarm.uuid}}">{% endif %}
+      {{ alarm.statereason }}
+
+      <hr>
+    </div>
+  {% endfor %}
+{% endif %}
+
+
+{% for graph in graphs %}
+
+<div>
+
+  <h2>{{ graph.Title }} <small>The last {{ graph.Timeframe }} hour(s)</small></h2>
+
+  <img src="cid:{{ graph.uuid }}">
+
+  {% for m in graph.metrics %}
+  <p>
+    <span style="color: {{ m.color }};">
+        {{ m.basic_label }}: {{ m.name_dimension }} / <strong>{{ m.name }}</strong>
+    </span>
+    [<span class="text-primary">median {{ m.median }}</span>]
+    [<span class="text-warning">max {{ m.max }}</span>]
+    [<span class="text-muted">min {{ m.min }}</span>]
+
+    {% if m.Unit == "Count" %}
+      <blockquote>Equivalent to {{ m.equivalent }} per day.</blockquote>
+    {% endif %}
+  </p>
+  {% endfor %}
+
+</div>
+
+{% endfor %}
+
+<hr>
+
+<h2>Status</h2>
+
+<h4>Level 1</h4>
+
+{% for alarm in alarms.alarms[1] %}
+    {% if alarm.hadalarms > 0 %}
+    <div style="color: orange;">
+
+        {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+        {% if alarm.uuid %}<img src="cid:{{alarm.uuid}}">{% endif %}
+
+        {% if alarm.history|length > 0 %}
+        <br>
+        <ul class="list-group">
+            {% for history in alarm.history %}
+                <!-- loop -->
+                <li class="list-group-item">
+                    <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+    </div>
+    {% endif %}
+{% endfor %}
+
+{% for alarm in alarms.warnings[1] %}
+<div style="color: blue;">
+    {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+    {% if alarm.uuid %}<img src="cid:{{alarm.uuid}}">{% endif %}
+
+    {% if alarm.history|length > 0 %}
+    <br>
+    <ul class="list-group">
+        {% for history in alarm.history %}
+            <!-- loop -->
+            <li class="list-group-item">
+                <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+</div>
+{% endfor %}
+
+{% for alarm in alarms.stable[1] %}
+<div>
+    {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+</div>
+{% endfor %}
+
+<hr>
+
+<h4>Level 2</h4>
+
+{% for alarm in alarms.alarms[2] %}
+<div>
+    {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+    {% if alarm.uuid %}<img src="cid:{{alarm.uuid}}">{% endif %}
+
+    {% if alarm.history|length > 0 %}
+    <br>
+    <ul class="list-group">
+        {% for history in alarm.history %}
+            <!-- loop -->
+            <li class="list-group-item">
+                <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+</div>
+{% endfor %}
+
+{% for alarm in alarms.warnings[2] %}
+<div>
+    {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+    {% if alarm.uuid %}<img src="cid:{{alarm.uuid}}">{% endif %}
+
+    {% if alarm.history|length > 0 %}
+    <br>
+    <ul class="list-group">
+        {% for history in alarm.history %}
+            <!-- loop -->
+            <li class="list-group-item">
+                <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+</div>
+{% endfor %}
+
+{% for alarm in alarms.stable[2] %}
+<div>
+    {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+</div>
+{% endfor %}
