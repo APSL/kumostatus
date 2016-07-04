@@ -114,20 +114,49 @@ Graphs:
                 yaxis: True
 ```
 
+## Use with docker
+
+Build the container. This step need some time to install and compile matplotlib.
+
+```bash
+git clone git://github.com/APSL/kumostatus.git kumostatus
+cd kumostatus
+sudo docker build -t kumostatus .
+```
+
+Now you have ready container image, and you can use in the command line:
+
+For docker, the whole project and files are in /code, and /app is "mounted" over /home/user/kumostatus. The app can read and write just in this folder, your config YML files must be there, and the html the app will generate too.
+
+```bash
+sudo docker run --rm -v /home/user/kumostatus:/app/ kumostatus /code/dashboard.py --hours 1 --config /app/dotw.yml --file /app/dotw.html
+```
+
+
 ## Example CRON jobs
 
 ```bash
+# Local python version
 * * * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 1 --file /var/www/status/index.html
 */2 * * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 8 --file /var/www/status/last8hours.html
 */10 * * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 24 --file /var/www/status/last24hours.html
 */10 * * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 48 --file /var/www/status/last48hours.html
+# Docker container version
+* * * * * docker run --rm -v /home/user/:/app/ kumostatus /code/dashboard.py --config="config.yml" --hours 1 --file index.html
+*/2 * * * * docker run --rm -v /home/user/:/app/ kumostatus /code/dashboard.py --config="config.yml" --hours 8 --file last8hours.html
+*/10 * * * * docker run --rm -v /home/user/:/app/ kumostatus /code/dashboard.py --config="config.yml" --hours 24 --file last24hours.html
+*/10 * * * * docker run --rm -v /home/user/:/app/ kumostatus /code/dashboard.py --config="config.yml" --hours 48 --file last48hours.html
 ```
 
 ## Sent reports by email
 
 ```bash
+# Local python version
 0 6 * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 12 --email email@example.com
 0 16 * * * python /home/user/kumostatus/dashboard.py --config="/home/user/config.yml" --hours 24 --email email@example.com
+# Docker container version
+0 6 * * * docker run --rm -v /home/user/:/app/ kumostatus /code/dashboard.py --config="config.yml" --hours 12 --email email@example.com
+0 16 * * * docker run --rm -v /home/user/:/app/ kumostatus /code/dashboard.py --config="config.yml" --hours 24 --email email@example.com
 ```
 
 ## TODO
