@@ -98,7 +98,7 @@ Graphs:
                 name: "Latency"
                 dimensions:
                     name: "LoadBalancerName"
-                    value: "DOTW-LB-EUWEST1-EXT"
+                    value: "ELB-EXT"
                 stadistics: "Average"
                 unit: "Seconds"
                 yaxis: False
@@ -108,7 +108,7 @@ Graphs:
                 name: "RequestCount"
                 dimensions:
                     name: "LoadBalancerName"
-                    value: "DOTW-LB-EUWEST1-EXT"
+                    value: "ELB-INT"
                 stadistics: "Sum"
                 unit: "Count"
                 yaxis: True
@@ -129,7 +129,7 @@ Now you have ready container image, and you can use in the command line:
 For docker, the whole project and files are in /code, and /app is "mounted" over /home/user/kumostatus. The app can read and write just in this folder, your config YML files must be there, and the html the app will generate too.
 
 ```bash
-sudo docker run --rm -v /home/user/kumostatus:/app/ kumostatus /code/dashboard.py --hours 1 --config /app/dotw.yml --file /app/dotw.html
+sudo docker run --rm -v /home/user/kumostatus:/app/ kumostatus /code/dashboard.py --hours 1 --config /app/aws.yml --file /app/aws.html
 ```
 
 
