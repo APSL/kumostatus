@@ -40,30 +40,34 @@ class Get(object):
         }
 
 
-        self.cloudwatch = boto3.client("cloudwatch")
-        alarms_raw = self.cloudwatch.describe_alarms(
-            MaxRecords=100
-        )
+        try:
 
-        for alarm_raw in alarms_raw['MetricAlarms']:
+            self.cloudwatch = boto3.client("cloudwatch")
+            alarms_raw = self.cloudwatch.describe_alarms(
+                MaxRecords=100
+            )
 
-            if not self.prepare(alarm_raw):
-                continue
+            for alarm_raw in alarms_raw['MetricAlarms']:
 
-            if self.record['status'] == 'ALARM':
-                self.record['image_base64'] = self.generate_graph(self.record['raw'])
+                if not self.prepare(alarm_raw):
+                    continue
 
-                if self.record['level'] <= 1:
-                    self.alarms[ self.record['level'] ].append(self.record)
-                else:
-                    self.warnings[ self.record['level'] ].append(self.record)
-
-            else:
-                if self.record['hadalarms']:
+                if self.record['status'] == 'ALARM':
                     self.record['image_base64'] = self.generate_graph(self.record['raw'])
-                    self.warnings[ self.record['level'] ].append(self.record)
+
+                    if self.record['level'] <= 1:
+                        self.alarms[ self.record['level'] ].append(self.record)
+                    else:
+                        self.warnings[ self.record['level'] ].append(self.record)
+
                 else:
-                    self.stable[ self.record['level'] ].append(self.record)
+                    if self.record['hadalarms']:
+                        self.record['image_base64'] = self.generate_graph(self.record['raw'])
+                        self.warnings[ self.record['level'] ].append(self.record)
+                    else:
+                        self.stable[ self.record['level'] ].append(self.record)
+        except:
+            print("Error on alarms history")
 
 
     def prepare(self, alarm_raw):

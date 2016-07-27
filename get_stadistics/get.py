@@ -40,6 +40,8 @@ class Get(object):
             utcnow = datetime.datetime.utcnow()
             fromutc = utcnow - datetime.timedelta(minutes=hours * 60)
 
+        print(datetime.datetime.utcnow(), "=", "From:", fromutc, "To: ", utcnow, "Diff: ", _delta, fixtime)
+
         period = 60
         if hours > 24:
             period = 60 * 2
@@ -54,7 +56,8 @@ class Get(object):
         )
 
         for i in self.response["Datapoints"]:
-            self._points[int((i["Timestamp"] + _delta ).strftime("%s"))] = i
+            _key = i["Timestamp"] + _delta
+            self._points[int(_key.strftime("%s"))] = i
 
         _smooth_split = 0
         if len(self._points) > 300:
@@ -65,7 +68,6 @@ class Get(object):
         _smooth_values = []
         for key in sorted(self._points):
             if _smooth_split > 0:
-
                 _smooth_points.append(self._points[key])
                 _smooth_dates.append(datetime.datetime.fromtimestamp(key))
                 _smooth_values.append(self._points[key][self.statistics])
@@ -87,7 +89,7 @@ class Get(object):
                     _smooth_values = []
             else:
                 self.points.append(self._points[key])
-                self.dates.append(self._points[key]["Timestamp"])
+                self.dates.append(datetime.datetime.fromtimestamp(key))
                 self.values.append(self._points[key][self.statistics])
 
             del self._points[key]
