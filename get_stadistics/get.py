@@ -39,9 +39,7 @@ class Get(object):
         else:
             utcnow = datetime.datetime.utcnow()
             fromutc = utcnow - datetime.timedelta(minutes=hours * 60)
-
-        print(datetime.datetime.utcnow(), "=", "From:", fromutc, "To: ", utcnow, "Diff: ", _delta, fixtime)
-
+            
         period = 60
         if hours > 24:
             period = 60 * 2
