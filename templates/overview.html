@@ -40,7 +40,8 @@
 
         <div class="row">
 
-            {% if alarms.alarms[1] %}
+
+            {% if alarms is defined and alarms.alarms[1] %}
                 <h3>Alarm!!</h3>
 
                 {% for alarm in alarms.alarms[1] %}
@@ -99,112 +100,115 @@
 
         <h4>Level 1</h4>
 
-        {% for alarm in alarms.alarms[1] %}
-            {% if alarm.hadalarms > 0 %}
-            <div class="alert alert-alert" role="alert">
+        {% if alarms is defined %}
 
-                {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-                {% if alarm.image_base64 %}
-                <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
-                {% endif %}
+          {% for alarm in alarms.alarms[1] %}
+              {% if alarm.hadalarms > 0 %}
+              <div class="alert alert-alert" role="alert">
 
-                {% if alarm.history|length > 0 %}
-                <br>
-                <ul class="list-group">
-                    {% for history in alarm.history %}
-                        <!-- loop -->
-                        <li class="list-group-item">
-                            <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+                  {% if alarm.image_base64 %}
+                  <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
+                  {% endif %}
 
-            </div>
-            {% endif %}
-        {% endfor %}
+                  {% if alarm.history|length > 0 %}
+                  <br>
+                  <ul class="list-group">
+                      {% for history in alarm.history %}
+                          <!-- loop -->
+                          <li class="list-group-item">
+                              <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+                          </li>
+                      {% endfor %}
+                  </ul>
+                  {% endif %}
 
-        {% for alarm in alarms.warnings[1] %}
-            <div class="alert alert-warning" role="alert">
-                {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-                {% if alarm.image_base64 %}
-                <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
-                {% endif %}
+              </div>
+              {% endif %}
+          {% endfor %}
 
-                {% if alarm.history|length > 0 %}
-                <br>
-                <ul class="list-group">
-                    {% for history in alarm.history %}
-                        <!-- loop -->
-                        <li class="list-group-item">
-                            <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+          {% for alarm in alarms.warnings[1] %}
+              <div class="alert alert-warning" role="alert">
+                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+                  {% if alarm.image_base64 %}
+                  <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
+                  {% endif %}
 
-            </div>
-        {% endfor %}
+                  {% if alarm.history|length > 0 %}
+                  <br>
+                  <ul class="list-group">
+                      {% for history in alarm.history %}
+                          <!-- loop -->
+                          <li class="list-group-item">
+                              <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+                          </li>
+                      {% endfor %}
+                  </ul>
+                  {% endif %}
 
-        {% for alarm in alarms.stable[1] %}
-            <div class="alert alert-success" role="alert">
-                {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-            </div>
-        {% endfor %}
+              </div>
+          {% endfor %}
 
-        <hr>
+          {% for alarm in alarms.stable[1] %}
+              <div class="alert alert-success" role="alert">
+                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+              </div>
+          {% endfor %}
 
-        <h4>Level 2</h4>
+          <hr>
 
-        {% for alarm in alarms.alarms[2] %}
-            <div class="alert alert-alert" role="alert">
-                {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-                {% if alarm.image_base64 %}
-                <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
-                {% endif %}
+          <h4>Level 2</h4>
 
-                {% if alarm.history|length > 0 %}
-                <br>
-                <ul class="list-group">
-                    {% for history in alarm.history %}
-                        <!-- loop -->
-                        <li class="list-group-item">
-                            <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+          {% for alarm in alarms.alarms[2] %}
+              <div class="alert alert-alert" role="alert">
+                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+                  {% if alarm.image_base64 %}
+                  <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
+                  {% endif %}
 
-            </div>
-        {% endfor %}
+                  {% if alarm.history|length > 0 %}
+                  <br>
+                  <ul class="list-group">
+                      {% for history in alarm.history %}
+                          <!-- loop -->
+                          <li class="list-group-item">
+                              <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+                          </li>
+                      {% endfor %}
+                  </ul>
+                  {% endif %}
 
-        {% for alarm in alarms.warnings[2] %}
-            <div class="alert alert-warning" role="alert">
-                {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-                {% if alarm.image_base64 %}
-                <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
-                {% endif %}
+              </div>
+          {% endfor %}
 
-                {% if alarm.history|length > 0 %}
-                <br>
-                <ul class="list-group">
-                    {% for history in alarm.history %}
-                        <!-- loop -->
-                        <li class="list-group-item">
-                            <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+          {% for alarm in alarms.warnings[2] %}
+              <div class="alert alert-warning" role="alert">
+                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+                  {% if alarm.image_base64 %}
+                  <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
+                  {% endif %}
 
-            </div>
-        {% endfor %}
+                  {% if alarm.history|length > 0 %}
+                  <br>
+                  <ul class="list-group">
+                      {% for history in alarm.history %}
+                          <!-- loop -->
+                          <li class="list-group-item">
+                              <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+                          </li>
+                      {% endfor %}
+                  </ul>
+                  {% endif %}
 
-        {% for alarm in alarms.stable[2] %}
-            <div class="alert alert-success" role="alert">
-                {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-            </div>
-        {% endfor %}
+              </div>
+          {% endfor %}
+
+          {% for alarm in alarms.stable[2] %}
+              <div class="alert alert-success" role="alert">
+                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+              </div>
+          {% endfor %}
+        {% endif %}
     </div>
 
 </div>

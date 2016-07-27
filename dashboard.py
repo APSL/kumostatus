@@ -28,7 +28,7 @@ if __name__ == "__main__":
     try:
         opts, args = getopt.getopt(sys.argv[1:], "", ["hours=", "config=", "file=", "email=",])
     except getopt.GetoptError:
-        print ('test.py --config <config yaml> --hours <hours> --file <file>')
+        print ('dashboard.py --config <config yaml> --hours <hours> --file <file>')
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-h", "--hours"):
@@ -74,6 +74,21 @@ if __name__ == "__main__":
                     unit=metric["unit"],
                     yaxis=metric["yaxis"]
                 ))
+
+                if "compare" in metric and type(metric["compare"]) is list and len(metric["compare"]) > 0:
+                    for compare in metric["compare"]:
+                        graph_metrics.add(get_stadistics.Get(
+                            label="%s (-%sh)" % (metric["label"], compare),
+                            hours=hours,
+                            namespace=metric["namespace"],
+                            name=metric["name"],
+                            dimensions=_dimensions,
+                            statistics=metric["statistics"],
+                            unit=metric["unit"],
+                            yaxis=metric["yaxis"],
+                            compare=compare
+                        ))
+
 
             graphs.append({
                 "Title": graph_params["title"],

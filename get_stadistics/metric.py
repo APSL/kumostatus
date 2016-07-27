@@ -19,20 +19,7 @@ class Metric(object):
         s.color = self.get_next_color()
 
         if len(s.points) > 0:
-            print("FOUND ++++++++++++++++++++")
-            pprint(s.label())
-            pprint(s.namespace)
-            pprint(s.dimensions)
-            pprint(s.unit)
-            pprint(s.statistics)
             self.metrics.append(s)
-        else:
-            print("NODATA ------------------------")
-            pprint(s.label())
-            pprint(s.namespace)
-            pprint(s.dimensions)
-            pprint(s.unit)
-            pprint(s.statistics)
 
 
     def get_next_color(self):

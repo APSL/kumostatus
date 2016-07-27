@@ -7,8 +7,9 @@ import numpy
 class Get(object):
     color = False
 
-    def __init__(self, label="", hours=1, namespace="", name="", dimensions=None, statistics="Average", unit="Seconds",
-                 yaxis=False):
+    def __init__(self, label="", hours=1, namespace="", name="",
+                 dimensions=None, statistics="Average", unit="Seconds",
+                 yaxis=False, compare=False):
 
         self.basic_label = label
         self.namespace = namespace
@@ -22,12 +23,22 @@ class Get(object):
         self.values = []
         self.yaxis = yaxis
         self.hours = hours
+        self.compare = compare
 
         cloudwatch = boto3.resource("cloudwatch")
         metric = cloudwatch.Metric(self.namespace, self.name)
 
-        utcnow = datetime.datetime.utcnow()
-        fromutc = utcnow - datetime.timedelta(minutes=hours * 60)
+        _delta = datetime.timedelta(minutes=0)
+        fixtime = 0
+
+        if self.compare:
+            _delta = datetime.timedelta(minutes=(self.compare*60) )
+            fixtime = _delta.total_seconds()
+            utcnow = datetime.datetime.utcnow() - _delta
+            fromutc = utcnow - datetime.timedelta(minutes=hours * 60)
+        else:
+            utcnow = datetime.datetime.utcnow()
+            fromutc = utcnow - datetime.timedelta(minutes=hours * 60)
 
         period = 60
         if hours > 24:
@@ -43,7 +54,7 @@ class Get(object):
         )
 
         for i in self.response["Datapoints"]:
-            self._points[int(i["Timestamp"].strftime("%s"))] = i
+            self._points[int((i["Timestamp"] + _delta ).strftime("%s"))] = i
 
         _smooth_split = 0
         if len(self._points) > 300:
@@ -56,7 +67,7 @@ class Get(object):
             if _smooth_split > 0:
 
                 _smooth_points.append(self._points[key])
-                _smooth_dates.append(self._points[key]["Timestamp"])
+                _smooth_dates.append(datetime.datetime.fromtimestamp(key))
                 _smooth_values.append(self._points[key][self.statistics])
 
                 if len(_smooth_points) == _smooth_split:

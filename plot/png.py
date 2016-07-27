@@ -1,6 +1,6 @@
 import base64
 from io import BytesIO
-from PIL import Image
+#from PIL import Image
 
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
@@ -77,15 +77,16 @@ class PNG(object):
         plt.savefig(self.output, dpi=75)
         plt.close()
         self.image = self.output.getvalue()
-        self.optimizepng()
+        #self.optimizepng()
         self.output.close()
 
-    def optimizepng(self):
-        buffer = BytesIO()
-        img = Image.open(self.output)
-        img.save(buffer, format="PNG", compress_level=5, optimize=True)
-        self.image = buffer.getvalue()
-        buffer.close()
+    # def optimizepng(self):
+    #     buffer = BytesIO()
+    #     img = Image.open(self.output)
+    #     img.convert("L")
+    #     img.save(buffer, format="PNG", compress_level=5, optimize=True)
+    #     self.image = buffer.getvalue()
+    #     buffer.close()
 
     def get_max(self, f, s):
         if s.unit == "Percent":
