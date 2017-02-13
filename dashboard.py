@@ -57,12 +57,8 @@ if __name__ == "__main__":
 
             for s in graph_params["metrics"]:
                 metric = s["metric"]
-                _dimensions = []
 
-                try:
-                    _dimensions = [metric["dimensions"], ]
-                except:
-                    _dimensions = []
+                _dimensions = metric.get("dimensions", [])
 
                 graph_metrics.add(get_stadistics.Get(
                     label=metric["label"],
