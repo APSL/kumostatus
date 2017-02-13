@@ -1,27 +1,19 @@
 # -*- coding: utf-8 -*-
-import cgi
-import uuid
-import os
-import boto3
 import base64
-import pprint
+import uuid
+from email.header import Header
+from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
-from email.mime.text      import MIMEText
-from email.mime.image     import MIMEImage
-from email.header         import Header
 
-class EMAIL(object):
+import boto3
 
-    test = 1
+
+class Email(object):
+    """ Base class for sending dashboard by email """
 
     def __init__(self, subject, email_from="", email_to=""):
-
-        self.test = 2
-
         self.email_from = email_from
         self.email_to = email_to
-
-        self.client = boto3.client('ses')
 
         self.msg = MIMEMultipart('related')
         self.msg['Subject'] = Header(subject, 'utf-8')
@@ -31,7 +23,6 @@ class EMAIL(object):
         self.msg.attach(self.msg_alternative)
 
     def add_graphs(self, graphs):
-
         for graph in graphs:
             self.add_image(
                 base64.b64decode(graph["image_base64"]),
@@ -40,7 +31,7 @@ class EMAIL(object):
             )
 
     def add_alarms(self, alarms):
-        for an in [1,2]:
+        for an in [1, 2]:
             for alarm in alarms.alarms[an]:
                 self._load_alarm(alarm)
 
@@ -61,14 +52,4 @@ class EMAIL(object):
         msg_image.add_header('Content-ID', '<{}>'.format(cid))
 
     def send(self, html):
-
-        msg_html = MIMEText(html,'html', 'utf-8')
-        self.msg_alternative.attach(msg_html)
-
-        self.client.send_raw_email(
-            Source = self.email_from,
-            Destinations = [ self.email_to, ],
-            RawMessage = {
-                "Data": self.msg.as_string()
-            }
-        )
+        raise NotImplementedError
