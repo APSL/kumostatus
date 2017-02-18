@@ -13,8 +13,8 @@ Graphs:
                 namespace: "AWS/ELB"
                 name: "Latency"
                 dimensions:
-                    name: "LoadBalancerName"
-                    value: "DOTW-LB-EUWEST1-EXT"
+                    - name: "LoadBalancerName"
+                      value: "DOTW-LB-EUWEST1-EXT"
                 statistics: "Average"
                 unit: "Seconds"
                 yaxis: False
@@ -23,8 +23,8 @@ Graphs:
                 namespace: "AWS/ELB"
                 name: "RequestCount"
                 dimensions:
-                    name: "LoadBalancerName"
-                    value: "DOTW-LB-EUWEST1-EXT"
+                    - name: "LoadBalancerName"
+                      value: "DOTW-LB-EUWEST1-EXT"
                 statistics: "Sum"
                 unit: "Count"
                 yaxis: True
@@ -36,8 +36,8 @@ Graphs:
                 namespace: "AWS/RDS"
                 name: "CPUUtilization"
                 dimensions:
-                    name: "DBInstanceIdentifier"
-                    value: "dotw-live"
+                    - name: "DBInstanceIdentifier"
+                      value: "dotw-live"
                 statistics: "Average"
                 unit: "Percent"
                 yaxis: False
@@ -46,8 +46,8 @@ Graphs:
                 namespace: "AWS/RDS"
                 name: "CPUUtilization"
                 dimensions:
-                    name: "DBInstanceIdentifier"
-                    value: "dotw-read01"
+                    - name: "DBInstanceIdentifier"
+                      value: "dotw-read01"
                 statistics: "Average"
                 unit: "Percent"
                 yaxis: False
@@ -56,8 +56,8 @@ Graphs:
                 namespace: "AWS/RDS"
                 name: "CPUUtilization"
                 dimensions:
-                    name: "DBInstanceIdentifier"
-                    value: "dotw-read02"
+                    - name: "DBInstanceIdentifier"
+                      value: "dotw-read02"
                 statistics: "Average"
                 unit: "Percent"
                 yaxis: False
@@ -66,8 +66,8 @@ Graphs:
                 namespace: "AWS/RDS"
                 name: "CPUUtilization"
                 dimensions:
-                    name: "DBInstanceIdentifier"
-                    value: "dotw-read03"
+                    - name: "DBInstanceIdentifier"
+                      value: "dotw-read03"
                 statistics: "Average"
                 unit: "Percent"
                 yaxis: False
@@ -76,8 +76,8 @@ Graphs:
                 namespace: "AWS/RDS"
                 name: "CPUUtilization"
                 dimensions:
-                    name: "DBInstanceIdentifier"
-                    value: "dotw-read04"
+                    - name: "DBInstanceIdentifier"
+                      value: "dotw-read04"
                 statistics: "Average"
                 unit: "Percent"
                 yaxis: False
@@ -86,8 +86,8 @@ Graphs:
                 namespace: "AWS/RDS"
                 name: "CPUUtilization"
                 dimensions:
-                    name: "DBInstanceIdentifier"
-                    value: "dotw-read05"
+                    - name: "DBInstanceIdentifier"
+                      value: "dotw-read05"
                 statistics: "Average"
                 unit: "Percent"
                 yaxis: False
@@ -96,8 +96,8 @@ Graphs:
                 namespace: "AWS/RDS"
                 name: "CPUUtilization"
                 dimensions:
-                    name: "DBInstanceIdentifier"
-                    value: "dotw-read06"
+                    - name: "DBInstanceIdentifier"
+                      value: "dotw-read06"
                 statistics: "Average"
                 unit: "Percent"
                 yaxis: False
@@ -106,8 +106,8 @@ Graphs:
                 namespace: "AWS/RDS"
                 name: "CPUUtilization"
                 dimensions:
-                    name: "DBInstanceIdentifier"
-                    value: "dotw-read07"
+                    - name: "DBInstanceIdentifier"
+                      value: "dotw-read07"
                 statistics: "Average"
                 unit: "Percent"
                 yaxis: False
@@ -116,8 +116,8 @@ Graphs:
                 namespace: "AWS/RDS"
                 name: "CPUUtilization"
                 dimensions:
-                    name: "DBInstanceIdentifier"
-                    value: "dotw-read08"
+                    - name: "DBInstanceIdentifier"
+                      value: "dotw-read08"
                 statistics: "Average"
                 unit: "Percent"
                 yaxis: False
@@ -129,8 +129,8 @@ Graphs:
                 namespace: "AWS/EC2"
                 name: "CPUUtilization"
                 dimensions:
-                    name: "AutoScalingGroupName"
-                    value: "TEST_MA_20160305_V2"
+                    - name: "AutoScalingGroupName"
+                      value: "TEST_MA_20160305_V2"
                 statistics: "Average"
                 unit: "Percent"
                 yaxis: False
