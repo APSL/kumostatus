@@ -45,7 +45,6 @@ if __name__ == "__main__":
         aws_secret_access_key=config.cfg['Credentials']['AWS_PASS'],
         region_name=config.cfg['Credentials']['region']
     )
-
     graphs = []
 
     for graphs_list in config.cfg["Graphs"]:
@@ -57,12 +56,8 @@ if __name__ == "__main__":
 
             for s in graph_params["metrics"]:
                 metric = s["metric"]
-                _dimensions = []
 
-                try:
-                    _dimensions = [metric["dimensions"], ]
-                except:
-                    _dimensions = []
+                _dimensions = metric.get("dimensions", [])
 
                 graph_metrics.add(get_stadistics.Get(
                     label=metric["label"],
@@ -116,13 +111,13 @@ if __name__ == "__main__":
         f.close()
 
     if email:
+        if "smtp" in config.cfg['Credentials']:
+            email_class = report.SMTPEmail
+            email_credentials = config.cfg['Credentials']['smtp']
 
-        if "email" in config.cfg['Credentials']:
-            boto3.setup_default_session(
-                aws_access_key_id=config.cfg['Credentials']['email']['AWS_ID'],
-                aws_secret_access_key=config.cfg['Credentials']['email']['AWS_PASS'],
-                region_name=config.cfg['Credentials']['email']['region']
-            )
+        elif "ses" in config.cfg['Credentials']:
+            email_class = report.SESEmail
+            email_credentials = config.cfg['Credentials']['ses']
 
         j2_env = Environment(loader=FileSystemLoader(THIS_DIR),
                              trim_blocks=True)
@@ -133,11 +128,12 @@ if __name__ == "__main__":
             gentime=datetime.utcnow().strftime("%Y/%h/%d %H:%M:%S"),
         )
 
-        mail_report = report.EMAIL(
-            subject = config.cfg["Template"]['title'],
-            email_from = config.cfg["Template"]["from"],
-            email_to = email
-            )
+        mail_report = email_class(
+            subject=config.cfg["Template"]['title'],
+            email_from=config.cfg["Template"]["from"],
+            email_to=email,
+            credentials=email_credentials
+        )
         mail_report.add_graphs(graphs)
         mail_report.add_alarms(alarms_list)
         mail_report.send(html)
