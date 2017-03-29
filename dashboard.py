@@ -24,11 +24,12 @@ if sys.version_info < (3, 0):
 if __name__ == "__main__":
     save_filename = False
     email = False
+    showalarms = False
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "", ["hours=", "config=", "file=", "email=",])
+        opts, args = getopt.getopt(sys.argv[1:], "", ["hours=", "config=", "file=", "email=", "alarms=",])
     except getopt.GetoptError:
-        print ('dashboard.py --config <config yaml> --hours <hours> --file <file>')
+        print ('dashboard.py --config <config yaml> --hours <hours> --email <email> --file <file> --alarms')
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-h", "--hours"):
@@ -39,6 +40,8 @@ if __name__ == "__main__":
             save_filename = arg
         elif opt in ("-e", "--email"):
             email = arg
+        elif opt in ("-a", "--alarms"):
+            showalarms = arg
 
     boto3.setup_default_session(
         aws_access_key_id=config.cfg['Credentials']['AWS_ID'],
@@ -94,7 +97,9 @@ if __name__ == "__main__":
                 "uuid": str(uuid.uuid4())
             })
 
-    alarms_list = alarms.Get(hours=hours)
+    alarms_list = {}
+    if showalarms:
+        alarms_list = alarms.Get(hours=hours)
 
     if save_filename:
         j2_env = Environment(loader=FileSystemLoader(THIS_DIR),
@@ -121,6 +126,7 @@ if __name__ == "__main__":
 
         j2_env = Environment(loader=FileSystemLoader(THIS_DIR),
                              trim_blocks=True)
+
         html = j2_env.get_template('email.html').render(
             title=config.cfg["Template"]['title'],
             graphs=graphs,
@@ -135,5 +141,6 @@ if __name__ == "__main__":
             credentials=email_credentials
         )
         mail_report.add_graphs(graphs)
-        mail_report.add_alarms(alarms_list)
+        if alarms_list:
+            mail_report.add_alarms(alarms_list)
         mail_report.send(html)

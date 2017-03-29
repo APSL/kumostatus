@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import base64
 import uuid
-from email.header import Header
-from email.mime.image import MIMEImage
-from email.mime.multipart import MIMEMultipart
+import email
 
 import boto3
 
@@ -15,11 +13,11 @@ class Email(object):
         self.email_from = email_from
         self.email_to = email_to
 
-        self.msg = MIMEMultipart('related')
-        self.msg['Subject'] = Header(subject, 'utf-8')
+        self.msg = email.mime.Multipart.MIMEMultipart('related')
+        self.msg['Subject'] = subject
         self.msg['From'] = email_from
         self.msg['To'] = ", ".join([email_to])
-        self.msg_alternative = MIMEMultipart('alternative')
+        self.msg_alternative = email.mime.Multipart.MIMEMultipart('alternative')
         self.msg.attach(self.msg_alternative)
 
     def add_graphs(self, graphs):
@@ -47,7 +45,7 @@ class Email(object):
             )
 
     def add_image(self, image, title="", cid=""):
-        msg_image = MIMEImage(image, name=title)
+        msg_image = email.mime.Image.MIMEImage(image, name=title)
         self.msg.attach(msg_image)
         msg_image.add_header('Content-ID', '<{}>'.format(cid))
 
