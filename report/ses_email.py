@@ -1,7 +1,7 @@
 # coding: utf-8
 import boto3
-from .email import Email
-from email.mime.text import MIMEText
+from .localemail import Email
+import email
 
 
 class SESEmail(Email):
@@ -17,7 +17,7 @@ class SESEmail(Email):
         self.client = boto3.client('ses')
 
     def send(self, html):
-        msg_html = MIMEText(html, 'html', 'utf-8')
+        msg_html = email.mime.Text.MIMEText(html, 'html', 'utf-8')
         self.msg_alternative.attach(msg_html)
 
         self.client.send_raw_email(

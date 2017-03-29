@@ -1,8 +1,8 @@
 # coding: utf-8
 import smtplib
-from email.mime.text import MIMEText
+import email
 
-from .email import Email
+from .localemail import Email
 
 
 class SMTPEmail(Email):
@@ -13,11 +13,12 @@ class SMTPEmail(Email):
         self._create_smtp_server(credentials)
 
     def _create_smtp_server(self, credentials):
-        self.server = smtplib.SMTP('smtp.gmail.com', 587)
+        self.server = smtplib.SMTP(credentials.get("host"), credentials.get("port"))
         self.server.starttls()
-        self.server.login(credentials.get('email'), credentials.get('password'))
+        self.server.login(credentials.get('user'), credentials.get('password'))
 
     def send(self, html):
-        msg_html = MIMEText(html, 'html', 'utf-8')
+        msg_html = email.mime.Text.MIMEText(html, 'html', 'utf-8')
         self.msg_alternative.attach(msg_html)
         self.server.sendmail(self.email_from, self.email_to, self.msg.as_string())
+

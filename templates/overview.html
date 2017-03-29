@@ -1,223 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ title }}</title>
-    </head>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <style type="text/css">
+    footer {
+        background-color: #2a2730;
+        color: #fff;
+        padding: 2em 0em;
+    }
+    </style>
+</head>
 <body>
 
     <!-- Static navbar -->
-<nav class="navbar navbar-default navbar-static-top">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">{{ title }}</a>
+    <nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">{{ title }}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="index.html">Last hour</a></li>
+            <li><a href="last8hours.html">Last 8 hours</a></li>
+            <li><a href="last24hours.html">Last 24 hours</a></li>
+            <li><a href="last48hours.html">Last 48 hours</a></li>
+        </ul>
+        </div><!--/.nav-collapse -->
     </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li><a href="index.html">Last hour</a></li>
-        <li><a href="last8hours.html">Last 8 hours</a></li>
-        <li><a href="last24hours.html">Last 24 hours</a></li>
-        <li><a href="last48hours.html">Last 48 hours</a></li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div>
-</nav>
+    </nav>
 
 
-<div class="container">
+    <div class="container">
 
-    <div class="col-md-12">
+        <div class="col-md-12">
 
-        <em>Generated at {{ gentime }}</em>
+            <em>Generated at {{ gentime }}</em>
 
-        <div class="row">
+            <div class="row">
 
+            {% if alarms is defined and alarms.alarms is defined %}
+                {% if alarms.alarms[1] %}
+                    <h3>Alarm!!</h3>
 
-            {% if alarms is defined and alarms.alarms[1] %}
-                <h3>Alarm!!</h3>
+                    {% for alarm in alarms.alarms[1] %}
 
-                {% for alarm in alarms.alarms[1] %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+                            <br>
+                            {{ alarm.current_value }}
+                            {% if alarm.image_base64 %}
+                            <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
+                            {% endif %}
+                            {{ alarm.statereason }}
+                        </div>
 
-                    <div class="alert alert-danger" role="alert">
-                        {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-                        <br>
-                        {{ alarm.current_value }}
-                        {% if alarm.image_base64 %}
-                        <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
-                        {% endif %}
-                        {{ alarm.statereason }}
-                    </div>
-
-                {% endfor %}
+                    {% endfor %}
+                {% endif %}
             {% endif %}
 
 
-        </div>
+            </div>
 
-        {% for graph in graphs %}
-            <div class="row">
+            {% for graph in graphs %}
+                <div class="row">
 
-                <div class="col-md-12">
-                    <h2>{{ graph.Title }} <small>The last {{ graph.Timeframe }} hour(s)</small></h2>
+                    <div class="col-md-12">
+                        <h2>{{ graph.Title }} <small>The last {{ graph.Timeframe }} hour(s)</small></h2>
 
 
-                        <img class="img-responsive" src="data:image/png;base64,{{ graph.image_base64 }}">
+                            <img class="img-responsive" src="data:image/png;base64,{{ graph.image_base64 }}">
 
-                        {% for m in graph.metrics %}
-                        <p>
-                            <span style="color: {{ m.color }};">
-                                {{ m.basic_label }}: {{ m.name_dimension }} / <strong>{{ m.name }}</strong>
-                            </span>
-                            [<span class="text-primary">median {{ m.median }}</span>]
-                            [<span class="text-warning">max {{ m.max }}</span>]
-                            [<span class="text-muted">min {{ m.min }}</span>]
+                            {% for m in graph.metrics %}
+                            <p>
+                                <span style="color: {{ m.color }};">
+                                    {{ m.basic_label }}: {{ m.name_dimension }} / <strong>{{ m.name }}</strong>
+                                </span>
+                                [<span class="text-primary">median {{ m.median }}</span>]
+                                [<span class="text-warning">max {{ m.max }}</span>]
+                                [<span class="text-muted">min {{ m.min }}</span>]
 
-                            {% if m.Unit == "Count" %}
-                            <blockquote>
-                                Equivalent to {{ m.equivalent }} per day.
-                            </blockquote>
-                            {% endif %}
+                                {% if m.Unit == "Count" %}
+                                <blockquote>
+                                    Equivalent to {{ m.equivalent }} per day.
+                                </blockquote>
+                                {% endif %}
 
-                        </p>
-                        {% endfor %}
+                            </p>
+                            {% endfor %}
+
+                    </div>
 
                 </div>
+            {% endfor %}
 
-            </div>
-        {% endfor %}
+            {% if alarms is defined and  alarms.alarms is defined %}
 
-        <hr>
+            <hr>
 
-        <h2>Status</h2>
+            <h2>Status</h2>
 
-        <h4>Level 1</h4>
+            <h4>Level 1</h4>
 
-        {% if alarms is defined %}
+            {% for alarm in alarms.alarms[1] %}
+                {% if alarm.hadalarms > 0 %}
+                <div class="alert alert-alert" role="alert">
 
-          {% for alarm in alarms.alarms[1] %}
-              {% if alarm.hadalarms > 0 %}
-              <div class="alert alert-alert" role="alert">
+                    {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+                    {% if alarm.image_base64 %}
+                    <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
+                    {% endif %}
 
-                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-                  {% if alarm.image_base64 %}
-                  <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
-                  {% endif %}
+                    {% if alarm.history|length > 0 %}
+                    <br>
+                    <ul class="list-group">
+                        {% for history in alarm.history %}
+                            <!-- loop -->
+                            <li class="list-group-item">
+                                <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
 
-                  {% if alarm.history|length > 0 %}
-                  <br>
-                  <ul class="list-group">
-                      {% for history in alarm.history %}
-                          <!-- loop -->
-                          <li class="list-group-item">
-                              <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
-                          </li>
-                      {% endfor %}
-                  </ul>
-                  {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
 
-              </div>
-              {% endif %}
-          {% endfor %}
+            {% for alarm in alarms.warnings[1] %}
+                <div class="alert alert-warning" role="alert">
+                    {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+                    {% if alarm.image_base64 %}
+                    <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
+                    {% endif %}
 
-          {% for alarm in alarms.warnings[1] %}
-              <div class="alert alert-warning" role="alert">
-                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-                  {% if alarm.image_base64 %}
-                  <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
-                  {% endif %}
+                    {% if alarm.history|length > 0 %}
+                    <br>
+                    <ul class="list-group">
+                        {% for history in alarm.history %}
+                            <!-- loop -->
+                            <li class="list-group-item">
+                                <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
 
-                  {% if alarm.history|length > 0 %}
-                  <br>
-                  <ul class="list-group">
-                      {% for history in alarm.history %}
-                          <!-- loop -->
-                          <li class="list-group-item">
-                              <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
-                          </li>
-                      {% endfor %}
-                  </ul>
-                  {% endif %}
+                </div>
+            {% endfor %}
 
-              </div>
-          {% endfor %}
+            {% for alarm in alarms.stable[1] %}
+                <div class="alert alert-success" role="alert">
+                    {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+                </div>
+            {% endfor %}
 
-          {% for alarm in alarms.stable[1] %}
-              <div class="alert alert-success" role="alert">
-                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-              </div>
-          {% endfor %}
+            <hr>
 
-          <hr>
+            <h4>Level 2</h4>
 
-          <h4>Level 2</h4>
+            {% for alarm in alarms.alarms[2] %}
+                <div class="alert alert-alert" role="alert">
+                    {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+                    {% if alarm.image_base64 %}
+                    <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
+                    {% endif %}
 
-          {% for alarm in alarms.alarms[2] %}
-              <div class="alert alert-alert" role="alert">
-                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-                  {% if alarm.image_base64 %}
-                  <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
-                  {% endif %}
+                    {% if alarm.history|length > 0 %}
+                    <br>
+                    <ul class="list-group">
+                        {% for history in alarm.history %}
+                            <!-- loop -->
+                            <li class="list-group-item">
+                                <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
 
-                  {% if alarm.history|length > 0 %}
-                  <br>
-                  <ul class="list-group">
-                      {% for history in alarm.history %}
-                          <!-- loop -->
-                          <li class="list-group-item">
-                              <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
-                          </li>
-                      {% endfor %}
-                  </ul>
-                  {% endif %}
+                </div>
+            {% endfor %}
 
-              </div>
-          {% endfor %}
+            {% for alarm in alarms.warnings[2] %}
+                <div class="alert alert-warning" role="alert">
+                    {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+                    {% if alarm.image_base64 %}
+                    <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
+                    {% endif %}
 
-          {% for alarm in alarms.warnings[2] %}
-              <div class="alert alert-warning" role="alert">
-                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-                  {% if alarm.image_base64 %}
-                  <img class="img-responsive" src="data:image/png;base64,{{ alarm.image_base64 }}">
-                  {% endif %}
+                    {% if alarm.history|length > 0 %}
+                    <br>
+                    <ul class="list-group">
+                        {% for history in alarm.history %}
+                            <!-- loop -->
+                            <li class="list-group-item">
+                                <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
 
-                  {% if alarm.history|length > 0 %}
-                  <br>
-                  <ul class="list-group">
-                      {% for history in alarm.history %}
-                          <!-- loop -->
-                          <li class="list-group-item">
-                              <kbd>{{ history.Timestamp }}</kbd> <span class="text-danger">{{ history.HistoryData.newState.stateValue }}</span> <span>{{ history.HistoryData.newState.stateReason }}</span>
-                          </li>
-                      {% endfor %}
-                  </ul>
-                  {% endif %}
+                </div>
+            {% endfor %}
 
-              </div>
-          {% endfor %}
+            {% for alarm in alarms.stable[2] %}
+                <div class="alert alert-success" role="alert">
+                    {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
+                </div>
+            {% endfor %}
+            {% endif %}
+        </div>
 
-          {% for alarm in alarms.stable[2] %}
-              <div class="alert alert-success" role="alert">
-                  {{ alarm.name }} / {{ alarm.metric }} <small>{{ alarm.description }}</small>
-              </div>
-          {% endfor %}
-        {% endif %}
     </div>
 
-</div>
+    <footer>
+        <div class="container">
+            <p>
+                <strong>KUMOSTATUS</string> Designed and built by <a href="https://github.com/apsL/kumostatus" target="_blank">@apsl_web</a>
+            </p>
+        </div>
+    </footer>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 </body>
 </html>

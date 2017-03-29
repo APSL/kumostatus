@@ -3,6 +3,13 @@ import datetime
 import boto3
 import numpy
 
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+logging.getLogger('boto3').setLevel(logging.WARNING)
+logging.getLogger('botocore').setLevel(logging.WARNING)
+logging.getLogger('nose').setLevel(logging.WARNING)
 
 class Get(object):
     color = False
@@ -44,14 +51,24 @@ class Get(object):
         if hours > 24:
             period = 60 * 2
 
-        self.response = metric.get_statistics(
-            Dimensions=self.dimensions,
-            StartTime=fromutc,
-            EndTime=utcnow,
-            Period=period,
-            Statistics=[self.statistics],
-            Unit=self.unit
-        )
+        if self.statistics[:1] == "p" and self.statistics[1:2].isdigit():
+            self.response = metric.get_statistics(
+                Dimensions=self.dimensions,
+                StartTime=fromutc,
+                EndTime=utcnow,
+                Period=period,
+                ExtendedStatistics=[self.statistics],
+                Unit=self.unit
+            )
+        else:
+            self.response = metric.get_statistics(
+                Dimensions=self.dimensions,
+                StartTime=fromutc,
+                EndTime=utcnow,
+                Period=period,
+                Statistics=[self.statistics],
+                Unit=self.unit
+            )
 
         for i in self.response["Datapoints"]:
             _key = i["Timestamp"] + _delta
@@ -68,7 +85,11 @@ class Get(object):
             if _smooth_split > 0:
                 _smooth_points.append(self._points[key])
                 _smooth_dates.append(datetime.datetime.fromtimestamp(key))
-                _smooth_values.append(self._points[key][self.statistics])
+                if self.statistics[:1] == "p" and self.statistics[1:2].isdigit():
+                    if self.statistics in self._points[key]["ExtendedStatistics"]:
+                        _smooth_values.append(self._points[key]["ExtendedStatistics"][self.statistics])
+                else:
+                    _smooth_values.append(self._points[key][self.statistics])
 
                 if len(_smooth_points) == _smooth_split:
 
@@ -88,7 +109,10 @@ class Get(object):
             else:
                 self.points.append(self._points[key])
                 self.dates.append(datetime.datetime.fromtimestamp(key))
-                self.values.append(self._points[key][self.statistics])
+                if self.statistics in self._points[key]:
+                    self.values.append(self._points[key][self.statistics])
+                else:
+                    logger.warning("In %s > %s: were not found datapoints in the statistics %s", self.namespace, self.name, self.statistics)
 
             del self._points[key]
 
